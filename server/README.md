@@ -1,161 +1,810 @@
-LMS Mega Project Backend
+# 📚 LMS Mega Project – Node.js + Express Backend
 
-Overview
-The LMS Mega Project Backend is a robust RESTful API for a Learning Management System (LMS), built with Node.js, Express.js, and MongoDB. It supports secure user authentication, profile management, and session handling using JSON Web Tokens (JWT) and Redis. The backend integrates Cloudinary for media uploads and Nodemailer for email notifications, providing a scalable and secure foundation for an LMS application.
+A scalable, production-ready Learning Management System (LMS) backend built with Node.js and Express. Features include robust authentication, role-based access, course management, Q&A, notifications, and multivendor support.
+---
 
-Table of Contents
+## 🚀 Overview
 
-Features
-Tech Stack
-Project Structure
-Prerequisites
-Installation
-Configuration
-Running the Application
-API Documentation
-Contributing
-License
+This backend powers a modern LMS platform, enabling:
 
+- 🔐 **Authentication**: Secure registration, login, logout, JWT & refresh tokens
+- 🧑‍💼 **User Roles**: Admin, instructor, student
+- 🎓 **Course Management**: Create, edit, purchase, review courses
+- ❓ **Q&A System**: Ask and answer questions on course content
+- 🔔 **Notifications**: Real-time notifications for users and admins
+- 🏪 **Multivendor**: Multiple instructors can manage their own courses
 
-Features
+---
 
-User Authentication: Secure registration, login, logout, and social authentication with JWT-based tokens.
-Account Activation: Email-based account activation with a 6-digit code stored in Redis.
-Session Management: Persistent sessions using Redis with automatic token refresh.
-Profile Management: Update user details, password, and profile picture with Cloudinary integration.
-Role-Based Access: Restrict routes based on user roles (user, admin).
-Error Handling: Centralized error handling for consistent API responses.
-File Uploads: Avatar uploads via Multer and Cloudinary.
-Email Notifications: Account activation emails using Nodemailer and EJS templates.
+## 🛠 Tech Stack
 
+- **Node.js** & **Express.js** – REST API server
+- **MongoDB** & **Mongoose** – Database & ODM
+- **Redis** – Advanced caching and session management
+- **Cloudinary** – Media storage and image optimization
+- **JWT** – Authentication tokens
+- **Nodemailer** & **EJS** – Email notifications
+- **Stripe** – Payment processing
+- **Multer** – File uploads
 
-Tech Stack
+---
 
-Runtime: Node.js
-Framework: Express.js
-Database: MongoDB with Mongoose
-Caching: Redis
-Authentication: JSON Web Tokens (JWT), bcryptjs
-File Storage: Cloudinary
-Email Service: Nodemailer with EJS templating
-Middleware: Multer, CORS, Cookie-Parser
-Environment: dotenv
+## ⚡ Setup Instructions
 
+1. **Clone the repository**
+   ```sh
+   git clone https://github.com/yourusername/lms-mega-project.git
+   cd lms-mega-project/server
+   ```
 
-Project Structure
-lms-mega-project/
-├── server/
-│   ├── controllers/
-│   │   └── user.controller.js       # User-related API logic
-│   ├── middleware/
-│   │   ├── auth.js                 # Authentication and authorization middleware
-│   │   ├── catchAsyncErrors.js     # Async error handling
-│   │   ├── error.js                # Global error handler
-│   │   └── multer.js               # File upload middleware
-│   ├── models/
-│   │   └── user.model.js           # Mongoose schema for User
-│   ├── routes/
-│   │   └── user.route.js           # User API routes
-│   ├── services/
-│   │   └── user.service.js         # User-related service functions
-│   ├── utils/
-│   │   ├── cloudinary.js           # Cloudinary configuration
-│   │   ├── db.js                   # MongoDB connection
-│   │   ├── ErrorHandler.js         # Custom error handler
-│   │   ├── jwt.js                  # JWT token generation
-│   │   ├── redis.js                # Redis configuration
-│   │   └── sendEmail.js            # Email sending utility
-│   ├── mails/
-│   │   └── activation-email.ejs    # Email template for activation
-│   ├── app.js                      # Express app setup
-│   └── server.js                   # Server entry point .env                            # Environment variables
-├── package.json                    # Project dependencies and scripts
-├── README.md                       # Project documentation
-└── apiDocs.md                      # API documentation for frontend developers
+2. **Install dependencies**
+   ```sh
+   npm install
+   ```
 
+3. **Configure environment variables**
+   - Copy `.env.example` to `.env` and fill in your values.
 
-Prerequisites
+4. **Start the server**
+   ```sh
+   npm start
+   ```
 
-Node.js: v16.0.0 or higher
-MongoDB: Local or cloud-based instance
-Redis: Local or cloud-based instance
-Cloudinary Account: For media uploads
-SMTP Service: For email notifications (e.g., Gmail, SendGrid)
+---
 
+## 📁 Folder Structure
 
-Installation
+```
+server/
+│
+├── app.js
+├── server.js
+├── package.json
+├── .env
+├── controllers/
+│   └── *.controller.js
+├── models/
+│   └── *.model.js
+├── routes/
+│   └── *.route.js
+├── services/
+│   └── *.service.js
+├── middleware/
+│   └── *.js
+├── utils/
+│   └── *.js
+├── mails/
+│   └── *.ejs
+```
 
-Clone the Repository:
-git clone https://github.com/your-username/lms-mega-project.git
-cd lms-mega-project
+---
 
+## 🔑 Environment Variables Example
 
-Install Dependencies:
-npm install
-
-
-Set Up Environment Variables:Create a .env file in the root directory with the following:
-PORT=4000
+```env
+PORT=3000
 DB_URI=mongodb://localhost:27017/lms
-REDIS_URL=redis://localhost:6379
 JWT_SECRET=your_jwt_secret
-REFRESH_TOKEN_SECRET=your_refresh_token_secret
+REFRESH_TOKEN_SECRET=your_refresh_secret
 ACCESSTOKEN_EXPIRE=300
 REFRESHTOKEN_EXPIRE=1200
+REDIS_URL=redis://localhost:6379
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_SERVICE=Gmail
+SMTP_MAIL=your@email.com
+SMTP_PASSWORD=yourpassword
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_SERVICE=your_email_service
-SMTP_MAIL=your_email@example.com
-SMTP_PASSWORD=your_email_password
+STRIPE_SECRET_KEY=your_stripe_secret
+STRIPE_PUBLISHABLE_KEY=your_stripe_publishable
 ORIGIN=http://localhost:3000
-NODE_ENV=development
+```
 
+---
 
+## 📖 API Documentation
 
+All endpoints are prefixed with `/app/v1`.
 
-Configuration
+| Endpoint                              | Method | Params / Body         | Auth Required | Description                                 |
+|----------------------------------------|--------|-----------------------|---------------|---------------------------------------------|
+| `/registration`                       | POST   | `{name, email, password}` | No        | Register a new user                         |
+| `/activate-user`                      | POST   | `{activation_code, activation_token}` | No | Activate user via email code                |
+| `/login-user`                         | POST   | `{email, password}`   | No            | Login user                                  |
+| `/logout`                             | GET    | -                     | Yes           | Logout user                                 |
+| `/refresh`                            | GET    | -                     | Yes (refresh) | Refresh access token                        |
+| `/me`                                 | GET    | -                     | Yes           | Get current user info                       |
+| `/create-course`                      | POST   | Course fields         | Admin/Instructor | Create a new course                     |
+| `/edit-course/:id`                    | PUT    | Course fields         | Admin/Instructor | Edit course                             |
+| `/get-course/:id`                     | GET    | -                     | No            | Get single course (public)                  |
+| `/get-courses`                        | GET    | -                     | No            | Get all courses (public)                    |
+| `/get-course-content/:id`             | GET    | -                     | Yes           | Get course content for enrolled user        |
+| `/add-question`                       | PUT    | `{question, courseId, contentId}` | Yes | Add question to course content              |
+| `/add-answer`                         | PUT    | `{answer, courseId, contentId, questionId}` | Yes | Answer a question                           |
+| `/add-review/:id`                     | PUT    | `{review, rating}`    | Yes           | Add review to course                        |
+| `/add-reply`                          | PUT    | `{comment, courseId, reviewId}` | Yes | Reply to a review                           |
+| `/create-order`                       | POST   | `{courseId, payment_info}` | Yes      | Purchase a course                           |
+| `/get-orders`                         | GET    | -                     | Admin/Instructor | Get all orders                          |
+| `/get-all-notifications`              | GET    | -                     | Admin/Instructor | Get all notifications                   |
+| `/update-notification/:id`            | PUT    | -                     | Admin/Instructor | Mark notification as read                |
+| `/get-users`                          | GET    | -                     | Admin         | Get all users                               |
+| `/update-user`                        | PUT    | `{id, role}`          | Admin         | Update user role                            |
+| `/delete-user/:id`                    | DELETE | -                     | Admin         | Delete user                                 |
+| `/update-profile-picture`             | POST   | `avatar` (form-data)  | Yes           | Update user profile picture                 |
 
-MongoDB: Ensure MongoDB is running or provide a cloud-based URI.
-Redis: Install Redis locally or use a cloud-based service.
-Cloudinary: Add your Cloudinary credentials to the .env file.
-SMTP: Configure an SMTP service for emails.
-CORS: Set the ORIGIN variable to your frontend URL.
+---
 
+## 📝 Standard API Response Format
 
-Running the Application
+All API responses follow a consistent structure for easy integration and error handling:
 
-Start the Server:
-npm start
+### Success Response
 
-
-Access the API:The server runs on http://localhost:4000. Test endpoints using Postman or a similar tool.
-
-Test Endpoint:
-GET http://localhost:4000/test
-
-Response:
+```json
 {
   "success": true,
-  "message": "API is working"
+  "message": "Operation completed successfully.",
+  "data": { /* resource-specific data */ }
 }
+```
 
+### Error Response
 
+```json
+{
+  "success": false,
+  "message": "Error message describing the issue."
+}
+```
 
+---
 
-API Documentation
-For detailed API documentation, including endpoints, request/response formats, and error handling, refer to the apiDocs.md file. This is designed for frontend developers to integrate with the backend.
+## 📦 Example Endpoint Responses
 
-Contributing
+### User Registration
 
-Fork the repository.
-Create a feature branch (git checkout -b feature/your-feature).
-Commit changes (git commit -m "Add your feature").
-Push to the branch (git push origin feature/your-feature).
-Open a Pull Request.
+**Request**
+```http
+POST /app/v1/registration
+Content-Type: application/json
 
+{
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "password": "securePassword123"
+}
+```
 
-License
-This project is licensed under the MIT License.
+**Success Response**
+```json
+{
+  "success": true,
+  "message": "Registration successful. Please check your email to activate your account.",
+  "data": {
+    "activationToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+
+**Error Response**
+```json
+{
+  "success": false,
+  "message": "Email already exists."
+}
+```
+
+---
+
+### Course Creation
+
+**Request**
+```http
+POST /app/v1/create-course
+Authorization: Bearer <JWT>
+Content-Type: application/json
+
+{
+  "title": "Node.js Masterclass",
+  "description": "Learn Node.js from scratch",
+  "price": 49.99,
+  "category": "Programming"
+}
+```
+
+**Success Response**
+```json
+{
+  "success": true,
+  "message": "Course created successfully.",
+  "data": {
+    "course": {
+      "_id": "64b1f2c8e2b1a2c3d4e5f6a7",
+      "title": "Node.js Masterclass",
+      "instructor": "64b1f2c8e2b1a2c3d4e5f6a1",
+      "price": 49.99,
+      "category": "Programming"
+    }
+  }
+}
+```
+
+**Error Response**
+```json
+{
+  "success": false,
+  "message": "Course title already exists."
+}
+```
+
+---
+
+### Advanced Features
+
+- **Cloudinary**: All media uploads (course images, user avatars) are stored and optimized via Cloudinary.
+- **Redis**: Frequently accessed data (e.g., course lists, user sessions) are cached for high performance.
+- **MongoDB**: All persistent data is stored in a scalable NoSQL database.
+- **Centralized Error Handling**: All errors are processed by a global middleware, ensuring consistent error responses.
+- **Role-Based Access Control**: Middleware restricts access to sensitive endpoints.
+- **Validation**: All input is validated and sanitized.
+- **Security**: Uses HTTP-only cookies for tokens, rate limiting, helmet, and CORS.
+- **Scalable Structure**: Modular controllers, services, and models for maintainability.
+- **Comprehensive Logging**: All requests and errors are logged for monitoring and debugging.
+
+---
+
+## 🤝 Contribution
+
+Contributions are welcome! Please:
+
+1. Fork the repo & create your branch.
+2. Commit your changes with clear messages.
+3. Open a pull request describing your changes.
+
+---
+
+## 📄 License
+
+This project is licensed under the # 📚 LMS Mega Project – Node.js + Express Backend
+
+A scalable, production-ready Learning Management System (LMS) backend built with Node.js and Express. Features include robust authentication, role-based access, course management, Q&A, notifications, and multivendor support.
+
+---
+
+## 🚀 Overview
+
+This backend powers a modern LMS platform, enabling:
+
+- 🔐 **Authentication**: Secure registration, login, logout, JWT & refresh tokens
+- 🧑‍💼 **User Roles**: Admin, instructor, student
+- 🎓 **Course Management**: Create, edit, purchase, review courses
+- ❓ **Q&A System**: Ask and answer questions on course content
+- 🔔 **Notifications**: Real-time notifications for users and admins
+- 🏪 **Multivendor**: Multiple instructors can manage their own courses
+
+---
+
+## 🛠 Tech Stack
+
+- **Node.js** & **Express.js** – REST API server
+- **MongoDB** & **Mongoose** – Database & ODM
+- **Redis** – Advanced caching and session management
+- **Cloudinary** – Media storage and image optimization
+- **JWT** – Authentication tokens
+- **Nodemailer** & **EJS** – Email notifications
+- **Stripe** – Payment processing
+- **Multer** – File uploads
+
+---
+
+## ⚡ Setup Instructions
+
+1. **Clone the repository**
+   ```sh
+   git clone https://github.com/yourusername/lms-mega-project.git
+   cd lms-mega-project/server
+   ```
+
+2. **Install dependencies**
+   ```sh
+   npm install
+   ```
+
+3. **Configure environment variables**
+   - Copy `.env.example` to `.env` and fill in your values.
+
+4. **Start the server**
+   ```sh
+   npm start
+   ```
+
+---
+
+## 📁 Folder Structure
+
+```
+server/
+│
+├── app.js
+├── server.js
+├── package.json
+├── .env
+├── controllers/
+│   └── *.controller.js
+├── models/
+│   └── *.model.js
+├── routes/
+│   └── *.route.js
+├── services/
+│   └── *.service.js
+├── middleware/
+│   └── *.js
+├── utils/
+│   └── *.js
+├── mails/
+│   └── *.ejs
+```
+
+---
+
+## 🔑 Environment Variables Example
+
+```env
+PORT=3000
+DB_URI=mongodb://localhost:27017/lms
+JWT_SECRET=your_jwt_secret
+REFRESH_TOKEN_SECRET=your_refresh_secret
+ACCESSTOKEN_EXPIRE=300
+REFRESHTOKEN_EXPIRE=1200
+REDIS_URL=redis://localhost:6379
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_SERVICE=Gmail
+SMTP_MAIL=your@email.com
+SMTP_PASSWORD=yourpassword
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+STRIPE_SECRET_KEY=your_stripe_secret
+STRIPE_PUBLISHABLE_KEY=your_stripe_publishable
+ORIGIN=http://localhost:3000
+```
+
+---
+
+## 📖 API Documentation
+
+All endpoints are prefixed with `/app/v1`.
+
+| Endpoint                              | Method | Params / Body         | Auth Required | Description                                 |
+|----------------------------------------|--------|-----------------------|---------------|---------------------------------------------|
+| `/registration`                       | POST   | `{name, email, password}` | No        | Register a new user                         |
+| `/activate-user`                      | POST   | `{activation_code, activation_token}` | No | Activate user via email code                |
+| `/login-user`                         | POST   | `{email, password}`   | No            | Login user                                  |
+| `/logout`                             | GET    | -                     | Yes           | Logout user                                 |
+| `/refresh`                            | GET    | -                     | Yes (refresh) | Refresh access token                        |
+| `/me`                                 | GET    | -                     | Yes           | Get current user info                       |
+| `/create-course`                      | POST   | Course fields         | Admin/Instructor | Create a new course                     |
+| `/edit-course/:id`                    | PUT    | Course fields         | Admin/Instructor | Edit course                             |
+| `/get-course/:id`                     | GET    | -                     | No            | Get single course (public)                  |
+| `/get-courses`                        | GET    | -                     | No            | Get all courses (public)                    |
+| `/get-course-content/:id`             | GET    | -                     | Yes           | Get course content for enrolled user        |
+| `/add-question`                       | PUT    | `{question, courseId, contentId}` | Yes | Add question to course content              |
+| `/add-answer`                         | PUT    | `{answer, courseId, contentId, questionId}` | Yes | Answer a question                           |
+| `/add-review/:id`                     | PUT    | `{review, rating}`    | Yes           | Add review to course                        |
+| `/add-reply`                          | PUT    | `{comment, courseId, reviewId}` | Yes | Reply to a review                           |
+| `/create-order`                       | POST   | `{courseId, payment_info}` | Yes      | Purchase a course                           |
+| `/get-orders`                         | GET    | -                     | Admin/Instructor | Get all orders                          |
+| `/get-all-notifications`              | GET    | -                     | Admin/Instructor | Get all notifications                   |
+| `/update-notification/:id`            | PUT    | -                     | Admin/Instructor | Mark notification as read                |
+| `/get-users`                          | GET    | -                     | Admin         | Get all users                               |
+| `/update-user`                        | PUT    | `{id, role}`          | Admin         | Update user role                            |
+| `/delete-user/:id`                    | DELETE | -                     | Admin         | Delete user                                 |
+| `/update-profile-picture`             | POST   | `avatar` (form-data)  | Yes           | Update user profile picture                 |
+
+---
+
+## 📝 Standard API Response Format
+
+All API responses follow a consistent structure for easy integration and error handling:
+
+### Success Response
+
+```json
+{
+  "success": true,
+  "message": "Operation completed successfully.",
+  "data": { /* resource-specific data */ }
+}
+```
+
+### Error Response
+
+```json
+{
+  "success": false,
+  "message": "Error message describing the issue."
+}
+```
+
+---
+
+## 📦 Example Endpoint Responses
+
+### User Registration
+
+**Request**
+```http
+POST /app/v1/registration
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "password": "securePassword123"
+}
+```
+
+**Success Response**
+```json
+{
+  "success": true,
+  "message": "Registration successful. Please check your email to activate your account.",
+  "data": {
+    "activationToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+
+**Error Response**
+```json
+{
+  "success": false,
+  "message": "Email already exists."
+}
+```
+
+---
+
+### Course Creation
+
+**Request**
+```http
+POST /app/v1/create-course
+Authorization: Bearer <JWT>
+Content-Type: application/json
+
+{
+  "title": "Node.js Masterclass",
+  "description": "Learn Node.js from scratch",
+  "price": 49.99,
+  "category": "Programming"
+}
+```
+
+**Success Response**
+```json
+{
+  "success": true,
+  "message": "Course created successfully.",
+  "data": {
+    "course": {
+      "_id": "64b1f2c8e2b1a2c3d4e5f6a7",
+      "title": "Node.js Masterclass",
+      "instructor": "64b1f2c8e2b1a2c3d4e5f6a1",
+      "price": 49.99,
+      "category": "Programming"
+    }
+  }
+}
+```
+
+**Error Response**
+```json
+{
+  "success": false,
+  "message": "Course title already exists."
+}
+```
+
+---
+
+### Advanced Features
+
+- **Cloudinary**: All media uploads (course images, user avatars) are stored and optimized via Cloudinary.
+- **Redis**: Frequently accessed data (e.g., course lists, user sessions) are cached for high performance.
+- **MongoDB**: All persistent data is stored in a scalable NoSQL database.
+- **Centralized Error Handling**: All errors are processed by a global middleware, ensuring consistent error responses.
+- **Role-Based Access Control**: Middleware restricts access to sensitive endpoints.
+- **Validation**: All input is validated and sanitized.
+- **Security**: Uses HTTP-only cookies for tokens, rate limiting, helmet, and CORS.
+- **Scalable Structure**: Modular controllers, services, and models for maintainability.
+- **Comprehensive Logging**: All requests and errors are logged for monitoring and debugging.
+
+---
+
+## 🤝 Contribution
+
+Contributions are welcome! Please:
+
+1. Fork the repo & create your branch.
+2. Commit your changes with clear messages.
+3. Open a pull request describing your changes.
+
+---
+
+## 📄 License
+
+This project is licensed under the # 📚 LMS Mega Project – Node.js + Express Backend
+
+A scalable, production-ready Learning Management System (LMS) backend built with Node.js and Express. Features include robust authentication, role-based access, course management, Q&A, notifications, and multivendor support.
+
+---
+
+## 🚀 Overview
+
+This backend powers a modern LMS platform, enabling:
+
+- 🔐 **Authentication**: Secure registration, login, logout, JWT & refresh tokens
+- 🧑‍💼 **User Roles**: Admin, instructor, student
+- 🎓 **Course Management**: Create, edit, purchase, review courses
+- ❓ **Q&A System**: Ask and answer questions on course content
+- 🔔 **Notifications**: Real-time notifications for users and admins
+- 🏪 **Multivendor**: Multiple instructors can manage their own courses
+
+---
+
+## 🛠 Tech Stack
+
+- **Node.js** & **Express.js** – REST API server
+- **MongoDB** & **Mongoose** – Database & ODM
+- **Redis** – Advanced caching and session management
+- **Cloudinary** – Media storage and image optimization
+- **JWT** – Authentication tokens
+- **Nodemailer** & **EJS** – Email notifications
+- **Stripe** – Payment processing
+- **Multer** – File uploads
+
+---
+
+## ⚡ Setup Instructions
+
+1. **Clone the repository**
+   ```sh
+   git clone https://github.com/yourusername/lms-mega-project.git
+   cd lms-mega-project/server
+   ```
+
+2. **Install dependencies**
+   ```sh
+   npm install
+   ```
+
+3. **Configure environment variables**
+   - Copy `.env.example` to `.env` and fill in your values.
+
+4. **Start the server**
+   ```sh
+   npm start
+   ```
+
+---
+
+## 📁 Folder Structure
+
+```
+server/
+│
+├── app.js
+├── server.js
+├── package.json
+├── .env
+├── controllers/
+│   └── *.controller.js
+├── models/
+│   └── *.model.js
+├── routes/
+│   └── *.route.js
+├── services/
+│   └── *.service.js
+├── middleware/
+│   └── *.js
+├── utils/
+│   └── *.js
+├── mails/
+│   └── *.ejs
+```
+
+---
+
+## 🔑 Environment Variables Example
+
+```env
+PORT=3000
+DB_URI=mongodb://localhost:27017/lms
+JWT_SECRET=your_jwt_secret
+REFRESH_TOKEN_SECRET=your_refresh_secret
+ACCESSTOKEN_EXPIRE=300
+REFRESHTOKEN_EXPIRE=1200
+REDIS_URL=redis://localhost:6379
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_SERVICE=Gmail
+SMTP_MAIL=your@email.com
+SMTP_PASSWORD=yourpassword
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+STRIPE_SECRET_KEY=your_stripe_secret
+STRIPE_PUBLISHABLE_KEY=your_stripe_publishable
+ORIGIN=http://localhost:3000
+```
+
+---
+
+## 📖 API Documentation
+
+All endpoints are prefixed with `/app/v1`.
+
+| Endpoint                              | Method | Params / Body         | Auth Required | Description                                 |
+|----------------------------------------|--------|-----------------------|---------------|---------------------------------------------|
+| `/registration`                       | POST   | `{name, email, password}` | No        | Register a new user                         |
+| `/activate-user`                      | POST   | `{activation_code, activation_token}` | No | Activate user via email code                |
+| `/login-user`                         | POST   | `{email, password}`   | No            | Login user                                  |
+| `/logout`                             | GET    | -                     | Yes           | Logout user                                 |
+| `/refresh`                            | GET    | -                     | Yes (refresh) | Refresh access token                        |
+| `/me`                                 | GET    | -                     | Yes           | Get current user info                       |
+| `/create-course`                      | POST   | Course fields         | Admin/Instructor | Create a new course                     |
+| `/edit-course/:id`                    | PUT    | Course fields         | Admin/Instructor | Edit course                             |
+| `/get-course/:id`                     | GET    | -                     | No            | Get single course (public)                  |
+| `/get-courses`                        | GET    | -                     | No            | Get all courses (public)                    |
+| `/get-course-content/:id`             | GET    | -                     | Yes           | Get course content for enrolled user        |
+| `/add-question`                       | PUT    | `{question, courseId, contentId}` | Yes | Add question to course content              |
+| `/add-answer`                         | PUT    | `{answer, courseId, contentId, questionId}` | Yes | Answer a question                           |
+| `/add-review/:id`                     | PUT    | `{review, rating}`    | Yes           | Add review to course                        |
+| `/add-reply`                          | PUT    | `{comment, courseId, reviewId}` | Yes | Reply to a review                           |
+| `/create-order`                       | POST   | `{courseId, payment_info}` | Yes      | Purchase a course                           |
+| `/get-orders`                         | GET    | -                     | Admin/Instructor | Get all orders                          |
+| `/get-all-notifications`              | GET    | -                     | Admin/Instructor | Get all notifications                   |
+| `/update-notification/:id`            | PUT    | -                     | Admin/Instructor | Mark notification as read                |
+| `/get-users`                          | GET    | -                     | Admin         | Get all users                               |
+| `/update-user`                        | PUT    | `{id, role}`          | Admin         | Update user role                            |
+| `/delete-user/:id`                    | DELETE | -                     | Admin         | Delete user                                 |
+| `/update-profile-picture`             | POST   | `avatar` (form-data)  | Yes           | Update user profile picture                 |
+
+---
+
+## 📝 Standard API Response Format
+
+All API responses follow a consistent structure for easy integration and error handling:
+
+### Success Response
+
+```json
+{
+  "success": true,
+  "message": "Operation completed successfully.",
+  "data": { /* resource-specific data */ }
+}
+```
+
+### Error Response
+
+```json
+{
+  "success": false,
+  "message": "Error message describing the issue."
+}
+```
+
+---
+
+## 📦 Example Endpoint Responses
+
+### User Registration
+
+**Request**
+```http
+POST /app/v1/registration
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "password": "securePassword123"
+}
+```
+
+**Success Response**
+```json
+{
+  "success": true,
+  "message": "Registration successful. Please check your email to activate your account.",
+  "data": {
+    "activationToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+
+**Error Response**
+```json
+{
+  "success": false,
+  "message": "Email already exists."
+}
+```
+
+---
+
+### Course Creation
+
+**Request**
+```http
+POST /app/v1/create-course
+Authorization: Bearer <JWT>
+Content-Type: application/json
+
+{
+  "title": "Node.js Masterclass",
+  "description": "Learn Node.js from scratch",
+  "price": 49.99,
+  "category": "Programming"
+}
+```
+
+**Success Response**
+```json
+{
+  "success": true,
+  "message": "Course created successfully.",
+  "data": {
+    "course": {
+      "_id": "64b1f2c8e2b1a2c3d4e5f6a7",
+      "title": "Node.js Masterclass",
+      "instructor": "64b1f2c8e2b1a2c3d4e5f6a1",
+      "price": 49.99,
+      "category": "Programming"
+    }
+  }
+}
+```
+
+**Error Response**
+```json
+{
+  "success": false,
+  "message": "Course title already exists."
+}
+```
+
+---
+
+### Advanced Features
+
+- **Cloudinary**: All media uploads (course images, user avatars) are stored and optimized via Cloudinary.
+- **Redis**: Frequently accessed data (e.g., course lists, user sessions) are cached for high performance.
+- **MongoDB**: All persistent data is stored in a scalable NoSQL database.
+- **Centralized Error Handling**: All errors are processed by a global middleware, ensuring consistent error responses.
+- **Role-Based Access Control**: Middleware restricts access to sensitive endpoints.
+- **Validation**: All input is validated and sanitized.
+- **Security**: Uses HTTP-only cookies for tokens, rate limiting, helmet, and CORS.
+- **Scalable Structure**: Modular controllers, services, and models for maintainability.
+- **Comprehensive Logging**: All requests and errors are logged for monitoring and debugging.
+
+---
+
+## 🤝 Contribution
+
+Contributions are welcome! Please:
+
+1. Fork the repo & create your branch.
+2. Commit your changes with clear messages.
+3. Open a pull request describing your changes.
+
+---
+
+## 📄 License
+
+This project is licensed under the [LMS ACADEMY](LICENSE)
